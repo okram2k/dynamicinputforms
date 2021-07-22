@@ -4,7 +4,6 @@ type Props = {
   formType: {
     id: number;
     name: string;
-    label: string;
     required: boolean;
     type: string;
   };
@@ -15,13 +14,17 @@ const FormGen: React.FC<Props> = ({ formType }) => {
     <>
       <Form.Item
         name={formType.name}
-        label={formType.label}
+        label={formType.name}
         rules={[{ required: formType.required }]}
       >
         {formType.type === "text" ? (
-          <Input name={formType.name} />
+          <Input name={formType.name} required={formType.required} />
         ) : formType.type === "number" ? (
-          <InputNumber name={formType.name} min={0} />
+          <InputNumber
+            name={formType.name}
+            min={0}
+            required={formType.required}
+          />
         ) : formType.type === "date" ? (
           <DatePicker name={formType.name} format="MM/DD/YYYY" />
         ) : formType.type === "year" ? (
