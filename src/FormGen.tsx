@@ -1,4 +1,5 @@
 import { Form, Input, Checkbox, DatePicker, InputNumber } from "formik-antd";
+const { TextArea } = Input;
 
 type Props = {
   formType: {
@@ -31,6 +32,8 @@ const FormGen: React.FC<Props> = ({ formType }) => {
           <DatePicker name={formType.name} picker="year" />
         ) : formType.type === "checkBox" ? (
           <Checkbox name={formType.name} />
+        ) : formType.type === "textArea" ? (
+          <TextArea name={formType.name} />
         ) : (
           "Unrecognized Form Type"
         )}

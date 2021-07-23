@@ -8,19 +8,13 @@ const data = [
   {
     id: 1,
     name: "Coverage",
-    required: false,
-    type: "text",
-  },
-  {
-    id: 2,
-    name: "Notes",
-    required: false,
+    required: true,
     type: "text",
   },
   {
     id: 3,
     name: "Producer",
-    required: false,
+    required: true,
     type: "text",
   },
   {
@@ -91,9 +85,9 @@ const data = [
   },
   {
     id: 15,
-    name: "cool",
+    name: "Notes",
     required: false,
-    type: "checkBox",
+    type: "textArea",
   },
 ];
 export default data;

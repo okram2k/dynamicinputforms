@@ -10,7 +10,7 @@ import {
   Form,
 } from "formik-antd";
 import { Formik, FormikProvider } from "formik";
-import { Button, Upload, message, notification } from "antd";
+import { Button, Upload, message, List, Typography, Space } from "antd";
 import "./index.css";
 import "antd/dist/antd.css";
 import { handleSubmit } from "./utils";
@@ -19,6 +19,7 @@ import FormGen from "./FormGen";
 import AddForm from "./AddForm";
 import data from "./data";
 const { Dragger } = Upload;
+const { Title } = Typography;
 let renderCount = 0;
 
 //console.log(data);
@@ -47,7 +48,7 @@ const props = {
   },
 };
 
-export default function App() {
+export default function NewFNOL() {
   const [workingData, setWorkingData] = useState(data);
 
   renderCount++;
@@ -87,35 +88,34 @@ export default function App() {
         }}
         render={(formik) => (
           <Form>
-            Render Count: {renderCount}
-            <div className="container">
-              <div className="component-container">
-                {workingData.map((formType) => (
-                  <>
-                    <FormGen formType={formType} />
-                  </>
-                ))}
-
-                <Dragger {...props}>
-                  <p className="ant-upload-drag-icon">
-                    <InboxOutlined />
-                  </p>
-                  <p className="ant-upload-text">
-                    Click or drag file to this area to attach to the claim.
-                  </p>
-                  <p className="ant-upload-hint">
-                    Support for a single or bulk upload.
-                  </p>
-                </Dragger>
-                <Button.Group size="large">
-                  <ResetButton color="red">Reset</ResetButton>
-                  <SubmitButton type="primary" disabled={false}>
-                    Submit
-                  </SubmitButton>
-                </Button.Group>
-              </div>
-              <FormikDebug style={{ maxWidth: 400 }} />
-            </div>
+            <Title>New FNOL</Title>
+            <List
+              grid={{ gutter: 16, column: 2 }}
+              dataSource={workingData}
+              renderItem={(formType) => (
+                <List.Item>
+                  <FormGen formType={formType} />
+                </List.Item>
+              )}
+            />
+            <Dragger {...props}>
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">
+                Click or drag file to this area to attach to the claim.
+              </p>
+              <p className="ant-upload-hint">
+                Support for a single or bulk upload.
+              </p>
+            </Dragger>
+            <br />
+            <Space>
+              <ResetButton color="red">Reset</ResetButton>
+              <SubmitButton type="primary" disabled={false}>
+                Submit
+              </SubmitButton>
+            </Space>
           </Form>
         )}
       />

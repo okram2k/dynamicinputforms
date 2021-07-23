@@ -1,0 +1,145 @@
+import * as React from "react";
+import { List, arrayMove } from "react-movable";
+import { Form, Input, InputNumber, DatePicker, Checkbox } from "antd";
+import {
+  MenuOutlined,
+  SettingFilled,
+  DeleteFilled,
+  SettingOutlined,
+} from "@ant-design/icons";
+import data from "./data";
+
+const { TextArea } = Input;
+
+const tableStyles = {
+  background: "#eaebec",
+  borderSpacing: 0,
+};
+
+const thStyles = {
+  borderBottom: "2px solid #ddd",
+  padding: "30px",
+  background: "#ededed",
+  color: "#666",
+  textAlign: "center",
+  fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+} as React.CSSProperties;
+
+const tdStyles = (width?: string): React.CSSProperties => ({
+  borderBottom: "1px solid #ddd",
+  color: "#666",
+  fontFamily: 'Arial, "Helvetica Neue", Helvetica, sans-serif',
+  padding: "24px",
+  textAlign: "center",
+  width,
+});
+
+const NewContract: React.FC = () => {
+  const [widths, setWidths] = React.useState<string[]>([]);
+  const [items, setItems] = React.useState(data);
+  return (
+    <div
+      style={{
+        padding: "3em",
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      <List
+        beforeDrag={({ elements, index }) => {
+          const cells = Array.from(elements[index].children);
+          const widths = cells.map(
+            (cell) => window.getComputedStyle(cell).width
+          );
+          setWidths(widths);
+        }}
+        values={items}
+        onChange={({ oldIndex, newIndex }) =>
+          setItems(arrayMove(items, oldIndex, newIndex))
+        }
+        renderList={({ children, props, isDragged }) => (
+          <table
+            style={{
+              ...tableStyles,
+              cursor: isDragged ? "grabbing" : undefined,
+            }}
+          >
+            <thead>
+              <tr>
+                <th style={thStyles}></th>
+                <th style={thStyles}>Name</th>
+                <th style={thStyles}>Required</th>
+                <th style={thStyles}>Type</th>
+                <th style={thStyles}>Preview</th>
+                <th style={thStyles}>Utils</th>
+              </tr>
+            </thead>
+            <tbody {...props}>{children}</tbody>
+          </table>
+        )}
+        renderItem={({ value, props, isDragged, isSelected }) => {
+          const _widths = isDragged ? widths : [];
+          const row = (
+            <tr
+              {...props}
+              style={{
+                ...props.style,
+                cursor: isDragged ? "grabbing" : "grab",
+                backgroundColor: isDragged || isSelected ? "#EEE" : "#fafafa",
+              }}
+            >
+              <td style={tdStyles(_widths[0])}>
+                <MenuOutlined />
+              </td>
+              <td style={tdStyles(_widths[1])}>{value.name}</td>
+              <td style={tdStyles(_widths[1])}>
+                {value.required ? "Yes" : "No"}
+              </td>
+              <td style={tdStyles(_widths[1])}>{value.type}</td>
+              <td style={tdStyles(_widths[2])}>
+                <Form.Item
+                  name={value.name}
+                  label={value.name}
+                  rules={[{ required: value.required }]}
+                >
+                  {value.type === "text" ? (
+                    <Input name={value.name} required={value.required} />
+                  ) : value.type === "number" ? (
+                    <InputNumber
+                      name={value.name}
+                      min={0}
+                      required={value.required}
+                    />
+                  ) : value.type === "date" ? (
+                    <DatePicker name={value.name} format="MM/DD/YYYY" />
+                  ) : value.type === "year" ? (
+                    <DatePicker name={value.name} picker="year" />
+                  ) : value.type === "checkBox" ? (
+                    <Checkbox name={value.name} />
+                  ) : value.type === "textArea" ? (
+                    <TextArea name={value.name} />
+                  ) : (
+                    "Unrecognized Form Type"
+                  )}
+                </Form.Item>
+              </td>
+              <td style={tdStyles(_widths[1])}>
+                <SettingFilled style={{ color: "#4285F4", fontSize: "24px" }} />{" "}
+                <DeleteFilled style={{ color: "#DB4437", fontSize: "24px" }} />
+              </td>
+            </tr>
+          );
+          return isDragged ? (
+            <table style={{ ...props.style, borderSpacing: 0 }}>
+              <tbody>{row}</tbody>
+            </table>
+          ) : (
+            row
+          );
+        }}
+      />
+    </div>
+  );
+};
+
+export default NewContract;
